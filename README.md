@@ -38,7 +38,16 @@ A typical usage might be
     usss -dnsname=somename.com -ttl=30 -outport=6262 -inport=2626 -bindaddr=10.0.0.1
 
 so that all packets arriving on port 2626 of 10.0.0.1 will be forwarded to port 6262
-on the hosts that are pointed by the somename.com record.
+on the hosts that are pointed by the somename.com record. Since the ttl is set to 30
+seconds, the somename.com record will be re-resolved every 30 seconds and the list of
+addresses updated accordingly.
+
+Guarantees
+==========
+
+The goroutines that resolve the dns record and that send the data are mutually excluded via [sync.Mutex](http://golang.org/pkg/sync/)
+so there is the guarantee that the set of ips that are used as destinations will be consistent
+between resolves.
 
 Bugs
 ====
